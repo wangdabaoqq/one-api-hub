@@ -289,6 +289,21 @@ const aggregateUsageData = (
   )
 }
 
+export interface SignInResponse {
+  success: boolean
+  message?: string
+  data?: {
+    quota?: number
+  }
+}
+
+export interface SignInResult {
+  success: boolean
+  message: string
+  quota?: number
+  isAlreadySigned?: boolean
+}
+
 // ============= 核心 API 函数 =============
 
 /**
@@ -894,5 +909,62 @@ export const determineHealthStatus = (error: any): HealthCheckResult => {
   return {
     status: "unknown",
     message: error?.message || "未知错误"
+  }
+}
+
+export const signIn = async (
+  baseUrl: string,
+  userId: number,
+  accessToken: string
+): Promise<SignInResult> => {
+  const url = `${baseUrl}/api/user/checkin`
+  const options = {
+    method: "POST",
+    headers: createRequestHeaders(userId, accessToken),
+    credentials: "omit" as RequestCredentials
+  }
+
+  try {
+    const response = await fetch(url, options)
+
+    if (!response.ok) {
+      throw new ApiError(
+        `签到请求失败: ${response.status}`,
+        response.status,
+        "/api/user/checkin"
+      )
+    }
+
+    const data: SignInResponse = await response.json()
+
+    const message = data.message || ""
+
+    if (message.includes("签到")) {
+      return {
+        success: false,
+        message: "今日已签到",
+        isAlreadySigned: true
+      }
+    }
+
+    if (data.success) {
+      return {
+        success: true,
+        message: data.message || "签到成功",
+        quota: data.data?.quota
+      }
+    }
+
+    return {
+      success: false,
+      message: message || "签到失败"
+    }
+  } catch (error) {
+    console.error("签到失败:", error)
+    return {
+      success: false,
+      message:
+        error instanceof ApiError ? error.message : "签到失败，请稍后重试"
+    }
   }
 }
