@@ -215,7 +215,12 @@ class AccountStorageService {
 
   async signInAccount(
     id: string
-  ): Promise<{ success: boolean; message: string; quota?: number }> {
+  ): Promise<{
+    success: boolean
+    message: string
+    quota?: number
+    isAlreadySigned?: boolean
+  }> {
     try {
       const account = await this.getAccountById(id)
       if (!account) {

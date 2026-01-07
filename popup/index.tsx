@@ -317,14 +317,15 @@ function IndexPopup() {
 
   // 处理打开插件时自动刷新和签到
   useEffect(() => {
-    let hasRun = false
     let mounted = true
+    let hasRun = false
 
     const handleOnOpen = async () => {
-      if (hasRun || !mounted) return
-      hasRun = true
-
+      // 确保所有数据已加载完成
       if (preferencesLoading || !preferences) return
+      if (!displayData || displayData.length === 0) return
+      if (hasRun) return
+      hasRun = true
 
       try {
         if (preferences.refreshOnOpen) {
@@ -351,7 +352,10 @@ function IndexPopup() {
   }, [
     preferencesLoading,
     preferences?.refreshOnOpen,
-    preferences?.autoSignInOnOpen
+    preferences?.autoSignInOnOpen,
+    displayData,
+    handleRefresh,
+    performAutoSignIn
   ])
 
   // 监听后台自动刷新的更新通知
