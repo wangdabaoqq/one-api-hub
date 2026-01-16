@@ -347,32 +347,6 @@ export default function BasicSettings() {
                 />
               </Switch>
             </div>
-
-            <div className="flex items-center justify-between py-4 border-b border-gray-100">
-              <div className="flex items-center space-x-3">
-                <CalendarIcon className="w-5 h-5 text-gray-400" />
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900">
-                    打开插件时自动签到
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    当打开插件弹出层时自动为所有账号签到
-                  </p>
-                </div>
-              </div>
-              <Switch
-                checked={autoSignInOnOpen}
-                onChange={handleAutoSignInOnOpenChange}
-                className={`${
-                  autoSignInOnOpen ? "bg-blue-600" : "bg-gray-200"
-                } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}>
-                <span
-                  className={`${
-                    autoSignInOnOpen ? "translate-x-6" : "translate-x-1"
-                  } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-                />
-              </Switch>
-            </div>
           </div>
         </section>
 
